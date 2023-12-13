@@ -1,9 +1,11 @@
 import { Button, Grid, TextField } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { isValidEMail, isValidName } from 'utils/validations';
 
 interface IForm {
   name: string;
   phoneNumber: string;
+  email: string;
 }
 const Form = () => {
   const {
@@ -14,11 +16,22 @@ const Form = () => {
     defaultValues: {
       name: '',
       phoneNumber: '',
+      email: '',
     },
   });
 
   const onSubmit: SubmitHandler<IForm> = (data) => {
     console.log(data);
+  };
+
+  const formatPhoneNumber = (value: string) => {
+    return (
+      value
+        .replace(/[^0-9]/g, '')
+        .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
+        // eslint-disable-next-line
+        .replace(/(\-{1,2})$/g, '')
+    );
   };
   return (
     <Grid>
@@ -40,10 +53,8 @@ const Form = () => {
               rules={{
                 required: '값을 입력 해주세요',
                 maxLength: 20,
-                pattern: {
-                  value: /^[ㄱ-ㅎ가-힣a-zA-Z\s]+$/,
-                  message: '한글, 영어, 공백만 입력 가능 합니다.',
-                },
+                validate: (value) =>
+                  isValidName(value) || '한글, 영어, 공백만 입력 가능 합니다.',
               }}
               render={({ field }) => (
                 <TextField
@@ -53,6 +64,30 @@ const Form = () => {
                   margin="normal"
                   error={Boolean(errors.name)}
                   helperText={errors.name?.message}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item sm={2} md={2}>
+            <p>이메일</p>
+          </Grid>
+          <Grid item sm={10} md={10}>
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: '값을 입력 해주세요',
+                validate: (value) =>
+                  isValidEMail(value) || '메일 주소를 확인해주세요.',
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  error={Boolean(errors.email)}
+                  helperText={errors.email?.message}
                 />
               )}
             />
@@ -84,20 +119,24 @@ const Form = () => {
                   inputProps={{ maxLength: 13 }}
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^0-9]/g, '');
-                    if (value.length >= 4) {
-                      field.onChange(
-                        value
-                          .replace(/[^0-9]/g, '')
-                          .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
-                          .replace(
-                            // eslint-disable-next-line
-                            /(\-{1,2})$/g,
-                            ''
-                          )
-                      );
-                    } else {
-                      field.onChange(value);
-                    }
+                    // if (value.length >= 4) {
+                    //   field.onChange(
+                    //     value
+                    //       .replace(/[^0-9]/g, '')
+                    //       .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
+                    //       .replace(
+                    //         // eslint-disable-next-line
+                    //         /(\-{1,2})$/g,
+                    //         ''
+                    //       )
+                    //   );
+                    // } else {
+                    //   field.onChange(value);
+                    // }
+
+                    if (value.length >= 4)
+                      field.onChange(formatPhoneNumber(value));
+                    else field.onChange(value);
                   }}
                 />
               )}
