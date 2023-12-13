@@ -1,6 +1,7 @@
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isValidEMail, isValidName } from 'utils/validations';
+import { CustomTextField, StyledTitle } from './styled';
 
 interface IForm {
   name: string;
@@ -34,7 +35,7 @@ const Form = () => {
     );
   };
   return (
-    <Grid>
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid
           container
@@ -44,7 +45,7 @@ const Form = () => {
           alignItems="center"
         >
           <Grid item sm={2} md={2}>
-            <p>이름</p>
+            <StyledTitle>이름</StyledTitle>
           </Grid>
           <Grid item sm={10} md={10}>
             <Controller
@@ -57,7 +58,7 @@ const Form = () => {
                   isValidName(value) || '한글, 영어, 공백만 입력 가능 합니다.',
               }}
               render={({ field }) => (
-                <TextField
+                <CustomTextField
                   {...field}
                   variant="outlined"
                   fullWidth
@@ -69,7 +70,7 @@ const Form = () => {
             />
           </Grid>
           <Grid item sm={2} md={2}>
-            <p>이메일</p>
+            <StyledTitle>이메일</StyledTitle>
           </Grid>
           <Grid item sm={10} md={10}>
             <Controller
@@ -81,7 +82,7 @@ const Form = () => {
                   isValidEMail(value) || '메일 주소를 확인해주세요.',
               }}
               render={({ field }) => (
-                <TextField
+                <CustomTextField
                   {...field}
                   variant="outlined"
                   fullWidth
@@ -93,7 +94,7 @@ const Form = () => {
             />
           </Grid>
           <Grid item sm={2} md={2}>
-            <p>핸드폰번호</p>
+            <StyledTitle>핸드폰번호</StyledTitle>
           </Grid>
           <Grid item sm={10} md={10}>
             <Controller
@@ -108,7 +109,7 @@ const Form = () => {
                 },
               }}
               render={({ field }) => (
-                <TextField
+                <CustomTextField
                   {...field}
                   variant="outlined"
                   fullWidth
@@ -132,7 +133,7 @@ const Form = () => {
           버튼
         </Button>
       </form>
-    </Grid>
+    </>
   );
 };
 
