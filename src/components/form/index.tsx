@@ -2,6 +2,7 @@ import { Button, Grid } from '@mui/material';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isValidEMail, isValidName } from 'utils/validations';
 import { CustomTextField, StyledTitle } from './styled';
+import InputText from './common/inputText';
 
 interface IForm {
   name: string;
@@ -19,6 +20,7 @@ const Form = () => {
       phoneNumber: '',
       email: '',
     },
+    mode: 'onChange',
   });
 
   const onSubmit: SubmitHandler<IForm> = (data) => {
@@ -48,49 +50,28 @@ const Form = () => {
             <StyledTitle>이름</StyledTitle>
           </Grid>
           <Grid item sm={10} md={10}>
-            <Controller
-              name="name"
+            <InputText
               control={control}
+              name="name"
               rules={{
-                required: '값을 입력 해주세요',
-                maxLength: 20,
+                required: '값을 입력해주세요',
                 validate: (value) =>
                   isValidName(value) || '한글, 영어, 공백만 입력 가능 합니다.',
               }}
-              render={({ field }) => (
-                <CustomTextField
-                  {...field}
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  error={Boolean(errors.name)}
-                  helperText={errors.name?.message}
-                />
-              )}
             />
           </Grid>
           <Grid item sm={2} md={2}>
             <StyledTitle>이메일</StyledTitle>
           </Grid>
           <Grid item sm={10} md={10}>
-            <Controller
-              name="email"
+            <InputText
               control={control}
+              name="email"
               rules={{
-                required: '값을 입력 해주세요',
+                required: '값을 입력해주세요',
                 validate: (value) =>
                   isValidEMail(value) || '메일 주소를 확인해주세요.',
               }}
-              render={({ field }) => (
-                <CustomTextField
-                  {...field}
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  error={Boolean(errors.email)}
-                  helperText={errors.email?.message}
-                />
-              )}
             />
           </Grid>
           <Grid item sm={2} md={2}>
@@ -127,6 +108,28 @@ const Form = () => {
                 />
               )}
             />
+            {/* <InputText
+              control={control}
+              name="phoneNumber"
+              rules={{
+                required: '값을 입력해주세요',
+                maxLength: 20,
+                pattern: {
+                  value: /^[0-9]{3}-[0-9]{4}-[0-9]{4}$/,
+                  message: '알맞는 핸드폰 번호 형식을 입력 해주세요',
+                },
+              }}
+              type="tel"
+              inputProps={{ maxLength: 13 }}
+              onChange={(e) => {
+                console.log('야');
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                if (value.length >= 4) {
+                  value = formatPhoneNumber(value);
+                }
+                setValue('phoneNumber', value);
+              }}
+            /> */}
           </Grid>
         </Grid>
         <Button type="submit" variant="contained">
